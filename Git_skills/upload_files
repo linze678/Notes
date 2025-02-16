@@ -1,5 +1,0 @@
-git init    //仓库初始化
-git add README.md   //添加readme.md文件
-git commit -m "first commit //提交
-git remote add origin git@github.com:zhouwenbin888/ceshi.git    //连接到远程仓库
-git push -u origin master     //推送
