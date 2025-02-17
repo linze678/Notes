@@ -1,0 +1,116 @@
+在我们的/etc/apt/sources.list文件下，拥有的是只是一些系统初装的源，后期的一些源还是得自己添加的，不然网上的很多资源包都是无法使用的。
+
+如何更改源呢？
+
+1、首先备份Ubuntu 8.04 的当前更新源列表（以备不测）
+      sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup （备份下当前的源列表）
+
+2、修改更新源
+      sudo gedit /etc/apt/sources.list 
+      
+3、在里面我选择在后面添加源；
+
+4、通知Ubuntu 11.10 启用新的更新源
+     sudo apt-get update
+     
+5、下载            sudo apt-get install <packagename>
+     
+     
+     
+     
+常见的源：
+
+1 中国科技大学源
+
+deb http://debian.ustc.edu.cn/ubuntu/ hardy main multiverse restricted universe
+deb http://debian.ustc.edu.cn/ubuntu/ hardy-backports main multiverse restricted universe
+deb http://debian.ustc.edu.cn/ubuntu/ hardy-proposed main multiverse restricted universe
+deb http://debian.ustc.edu.cn/ubuntu/ hardy-security main multiverse restricted universe
+deb http://debian.ustc.edu.cn/ubuntu/ hardy-updates main multiverse restricted universe
+deb-src http://debian.ustc.edu.cn/ubuntu/ hardy main multiverse restricted universe
+deb-src http://debian.ustc.edu.cn/ubuntu/ hardy-backports main multiverse restricted universe
+deb-src http://debian.ustc.edu.cn/ubuntu/ hardy-proposed main multiverse restricted universe
+deb-src http://debian.ustc.edu.cn/ubuntu/ hardy-security main multiverse restricted universe
+deb-src http://debian.ustc.edu.cn/ubuntu/ hardy-updates main multiverse restricted universe
+
+ 
+
+2 北京交大源
+
+deb http://mirror.bjtu.edu.cn/Ubuntu/ hardy main restricted universe multiverse
+deb http://mirror.bjtu.edu.cn/Ubuntu/ hardy-backports restricted universe multiverse
+deb http://mirror.bjtu.edu.cn/Ubuntu/ hardy-proposed main restricted universe multiverse
+deb http://mirror.bjtu.edu.cn/Ubuntu/ hardy-security main restricted universe multiverse
+deb http://mirror.bjtu.edu.cn/Ubuntu/ hardy-updates main restricted universe multiverse
+deb-src http://mirror.bjtu.edu.cn/Ubuntu/ hardy main restricted universe multiverse
+deb-src http://mirror.bjtu.edu.cn/Ubuntu/ hardy-backports main restricted universe multiverse
+deb-src http://mirror.bjtu.edu.cn/Ubuntu/ hardy-proposed main restricted universe multiverse
+deb-src http://mirror.bjtu.edu.cn/Ubuntu/ hardy-security main restricted universe multiverse
+deb-src http://mirror.bjtu.edu.cn/Ubuntu/ hardy-updates main restricted universe multiverse
+
+ 
+
+3 台湾大学源
+
+deb http://ubuntu.csie.ntu.edu.tw/ubuntu/ hardy main restricted universe multiverse
+deb-src http://ubuntu.csie.ntu.edu.tw/ubuntu/ hardy main restricted universe multiverse
+deb http://ubuntu.csie.ntu.edu.tw/ubuntu/ hardy-updates main restricted universe multiverse
+deb-src http://ubuntu.csie.ntu.edu.tw/ubuntu/ hardy-updates main restricted universe multiverse
+deb http://ubuntu.csie.ntu.edu.tw/ubuntu/ hardy-backports main restricted universe multiverse
+deb-src http://ubuntu.csie.ntu.edu.tw/ubuntu/ hardy-backports main restricted universe multiverse
+deb http://ubuntu.csie.ntu.edu.tw/ubuntu/ hardy-security main restricted universe multiverse
+deb-src http://ubuntu.csie.ntu.edu.tw/ubuntu/ hardy-security main restricted universe multiverse
+deb http://ubuntu.csie.ntu.edu.tw/ubuntu/ hardy-proposed main multiverse restricted universe
+deb-src http://ubuntu.csie.ntu.edu.tw/ubuntu/ hardy-proposed main restricted universe multiverse
+
+4 CN99源
+
+deb http://Ubuntu.cn99.com/ubuntu/ hardy main restricted universe multiverse
+deb http://Ubuntu.cn99.com/ubuntu/ hardy-security main restricted universe multiverse
+deb http://Ubuntu.cn99.com/ubuntu/ hardy-updates main restricted universe multiverse
+deb http://Ubuntu.cn99.com/ubuntu/ hardy-proposed main restricted universe multiverse
+deb http://Ubuntu.cn99.com/ubuntu/ hardy-backports main restricted universe multiverse
+deb-src http://Ubuntu.cn99.com/ubuntu/ hardy main restricted universe multiverse
+deb-src http://Ubuntu.cn99.com/ubuntu/ hardy-security main restricted universe multiverse
+deb-src http://Ubuntu.cn99.com/ubuntu/ hardy-updates main restricted universe multiverse
+deb-src http://Ubuntu.cn99.com/ubuntu/ hardy-proposed main restricted universe multiverse
+deb-src http://Ubuntu.cn99.com/ubuntu/ hardy-backports main restricted universe multiverse
+
+ 
+
+5 Lupaworld源
+
+deb http://mirror.lupaworld.com/ubuntu hardy main restricted universe multiverse
+deb http://mirror.lupaworld.com/ubuntu hardy-security main restricted universe multiverse
+deb http://mirror.lupaworld.com/ubuntu hardy-updates main restricted universe multiverse
+deb http://mirror.lupaworld.com/ubuntu hardy-backports main restricted universe multiverse
+deb http://mirror.lupaworld.com/ubuntu hardy-proposed main restricted universe multiverse
+deb-src http://mirror.lupaworld.com/ubuntu hardy main restricted universe multiverse
+deb-src http://mirror.lupaworld.com/ubuntu hardy-security main restricted universe multiverse
+deb-src http://mirror.lupaworld.com/ubuntu hardy-updates main restricted universe multiverse
+deb-src http://mirror.lupaworld.com/ubuntu hardy-backports main restricted universe multiverse
+deb-src http://mirror.lupaworld.com/ubuntu hardy-proposed main restricted universe multiverse
+
+
+
+6. 清华大学源——https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/
+# 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
+
+# 以下安全更新软件源包含了官方源与镜像站配置，如有需要可自行修改注释切换
+deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+# deb-src http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+
+# 预发布软件源，不建议启用
+# deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-proposed main restricted universe multiverse
+# # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-proposed main restricted universe multiverse
+
+
+
+（注释：deb代表的是我们需要的deb软件包，deb-src 是指下载源代码得指示。之后是包的来源地址，再在后面是系统的标记。之后的main代表的是主要软件包，universe是不被官方支持的自由软件。)
+
