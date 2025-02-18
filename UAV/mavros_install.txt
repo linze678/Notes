@@ -1,0 +1,10 @@
+//安装 MAVROS 和相关包,该指令对应的ros版本是ros2 humble
+sudo apt-get install ros-humble-mavros ros-humble-mavros-extras ros-humble-mavros-msgs
+
+//下载脚本
+git clone -b ros2 https://github.com/mavlink/mavros.git
+
+//运行脚本
+cd mavros/mavros/scripts
+sudo chmod a+x ./install_geographiclib_datasets.sh
+sudo ./install_geographiclib_datasets.sh
