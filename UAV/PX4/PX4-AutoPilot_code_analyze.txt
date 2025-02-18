@@ -11,10 +11,13 @@
 	build文件夹是编译目标目录，只有经过至少一次编译才会生成此文件夹，内部存放的是源码经过编译生成的编译选项、中间文件、目标文件等。编译不同版本的固件会生成不同的文件夹。
 	px4_fmu-v2_default就是make px4_fmu-v2_default命令编译生成的，用于飞控板的。
 	px4_sitl_default就是make px4_sitl_default命令编译生成的，用于jMAVSim仿真或gazebo仿真。
+		内部主要需要在意的是：topics_temporary_header(所有的任务是要的头文件，在创建任务和使用数据结构时可以从该处检索)；topics_temporary_sources(系统中所有的任务函数)
 
 
 3. cmake文件夹
 	cmake文件夹是cmake编译工具的相关文件，在开发中这个文件夹中的文件不需要修改。
+	主要使用 nuttx_px4fmu-v2_default.cmake。该处主要是关于系统使用的文件的路径配置，在 PX4 系统所有的.CPP 和.C 文件都是通过在该处进行路径包含的。
+	在需要自己创建私有任务或者 sensor 驱动程序时需要添加到该处。
 	
 	
 4. Documentation文件夹
@@ -27,6 +30,8 @@
 	
 6. msg文件夹
 	msg文件夹是存放uORB消息主题的地方，实现PX4各进程之间通信就是用这些message。我们可以在这个文件夹内定义自己的message。
+	该文件夹下的 Cmakelists.txt，该文档是整个 msg 部分的配置部分，在开发者创建私有任务或sensor驱动程序时创建对应的数据结构（***.msg）以后，需要把开发者创建的***.msg 添加到Cmakelists.txt 中，否则编译时识别不到开发者创建的数据结构。
+	在该部分创建好以后，直接编译可以自动生成相对应的 C/C++下的标准头文件，即在build文件夹中所介绍的 topics_temporary_header，在 PX4 系统的任何一个地方引用所需要的数据结构，都需要把这个头文件包含进去。
 	
 	
 7. ROMFS文件夹
@@ -35,8 +40,9 @@
 	如文件rcS、rc.logging、rc.mc_apps、rc.sensors等
 	rcS：最先启动的脚本，负责挂载SD卡、启动uORB、配置系统参数等。
 	rc.logging：日志配置和启动代码。
-	rc.sensors：sensors驱动启动代码。
-	rc.mc_apps：启动上层应用（src/modules中的模块均在此启动），如 attitude_estimate 、attitude_control 、position_estimate 和 position_control 等。
+	rc.sensors：sensors驱动启动代码。（如果在 src/drivers 中创建私有的 sensor 驱动，建议放在该部分启动）
+	rc.mc_default：配置和 PWM***相关的系统参数，内部含有怠速的配置。
+	rc.mc_apps：启动上层应用（src/modules中的模块均在此启动），如 attitude_estimate 、attitude_control 、position_estimate 和 position_control 等。（如果在 src/modules 中创建私有的上层 application，建议放在该部分启动）
 	
 	
 8. platforms文件夹
@@ -45,16 +51,17 @@
 
 9. src文件夹
 	src是源代码目录，是PX4的核心，非常重要。
-	（1）drivers文件夹
-		pixhawk 硬件系统中使用的所有传感器的驱动代码，包括陀螺仪、加速度计、磁力计、气压计、GPS、光流等，也包括pwm输出、px4io控制、不同遥控器通信协议等功能的驱动。
+	（1）drivers文件夹（驱动）
+		pixhawk 硬件系统中使用的所有传感器的驱动代码，包括陀螺仪、加速度计、磁力计、气压计、GPS、光流等，也包括pwm驱动、STM32主控MCU的io输出控制（px4io控制）、不同遥控器通信协议等功能的驱动。
 	（2）examples文件夹
-		examples文件夹是官方给出的简单例程，帮助新手开发者入门进行二次开发。
+		examples文件夹是官方给出的简单例程，为了便于开发者做二次开发调试测试使用。
+		尤其是 px4_simple_app，内部涉及了如何通过 uORB 机制获取所需要的数据。
 	（3）include文件夹
 		include文件夹是其他代码需要用到的头文件和库。
 	（4）lib文件夹
 		标准库：有矩阵运算、PID控制、传感器校准等。
-	（5）modules文件夹
-		modules文件夹是功能模块文件夹，也是二次开发主要的文件夹，包括姿态解算，姿态控制，位置估计，位置控制，指令控制，落地检测，传感器初始化等。
+	（5）modules文件夹（算法）
+		modules文件夹是功能模块文件夹，也是二次开发主要的文件夹，包括姿态解算，姿态控制，位置估计，位置控制，指令控制，落地检测，传感器初始化，uORB，commander(校准)等。
 		attitude_estimator_q：使用 mahony 互补滤波算法实现姿态结算。
 		commander：整个系统的过程实现，包括起飞前各传感器的校准、安全开关是否使能、飞行模式切换、pixhawk硬件上指示灯颜色定义等。
 		ekf2：使用扩展卡尔曼滤波器算法实现姿态和位置结算。
@@ -69,6 +76,9 @@
 		navigator：任务，失效保护和RTL导航仪。
 		sensors：关于各种传感器的相关函数。
 		vtol_att_control：垂直起降姿态控制器。
+		systemlib：系统所需要的参数列表。
+		uORB：IPC 通信机制。首先就是需要了解如何使用它进行进程间通信，了解整个系统中的数据流流向。
+		sdlog2：SD 卡的 log 日志读写部分，在 SD 卡中看到的所有数据都是通过该部分写进去的，平时做 log 日志分析也是查看的这个内部的数据，所以，假如想监测某个“目标数据”，也可以由此处写到 SD 卡中然后在做相应的分析。
 	（6）systemcmds文件夹
 		systemcmds文件夹是系统指令文件夹，都是飞控终端支持的命令的源码，如top命令，reboot命令等。
 	（7）templates文件夹
