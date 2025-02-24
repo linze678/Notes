@@ -1,0 +1,58 @@
+uORB(Micro Object Request Broker,微对象请求代理器)是PX4/Pixhawk系统中的模块，负责整个系统的数据传输任务，所有的传感器数据、GPS、PPM信号等都要从芯片获取后通过uORB进行传输到各个模块进行计算处理。
+
+
+PX4 与 ROS2 有两种连接方式：MAVROS 和 Fast DDS（RTPS）。
+
+一、MAVROS（MAVLink ROS）：
+    默认情况下，PX4使用固定的UDP端口与地面站（如QGroundControl）、机载电脑（如MAVSDK、MAVROS）和仿真器（如Gazebo）进行MAVLink通信。
+    PX4 的远程 UDP 端口 14540 用于与外部 API 通信（与Offboard模式板外电脑进行通信）。Offboard模式板外电脑应侦听此端口上的连接。
+    PX4 的远程 UDP 端口 14550 用于与地面控制站通信。默认情况下，QGroundControl 监听此端口。
+    模拟器的本地 TCP 端口 4560 用于与 PX4 通信。PX4 侦听此端口，仿真器应通过向该端口广播数据来启动通信。
+    //MAVROS 是一个 ROS 包，用于与飞行控制器（如 PX4 或 ArduPilot）之间进行通信，使用 MAVLink 协议来控制飞行器并处理飞行器的状态信息。
+
+二、Fast DDS（RTPS）：
+    模拟器还可以使用 uxrce-dds 桥 （XRCE-DDS） 直接与 PX4 交互（即通过 UORB 主题而不是 MAVLink）。
+    //Micro-XRCE-DDS-Agent 主要用于支持 ROS 2 与嵌入式设备（如微控制器）之间的通信，使用 DDS 协议进行实时数据传输。
+    MicroXRCEAgent udp4 -p 8888     //启动DDS代理
+
+
+
+仿真过程中的总体连接流程如下：
+1. PX4 与 ROS2 通信：
+    通过 MAVROS 通信：
+        ??????????????????????
+    通过 Fast DDS (RTPS) 通信：
+        MicroXRCEAgent udp4 -p 8888     //启动DDS代理
+2. PX4 与 QGC 通信：
+    打开 QGC，它会自动连接到 14550 端口。
+        如果未自动连接，手动添加 UDP 链接：
+        QGC Settings → Comm Links → Add → UDP
+        设置端口为 14550。
+3. PX4 与 gazebo 通信：
+    PX4 的 SITL（Software-In-The-Loop）仿真模式 会启动一个轻量级飞控实例，并通过 TCP 端口 4560 与 Gazebo 交换数据。
+    Gazebo 通过一个专用插件（libgazebo_mavlink_interface.so）连接到 PX4，实现传感器数据和控制指令的双向传输。
+    运行make px4_sitl gz_x500时，PX4 不仅会启动 SITL 仿真进程，还会在本地 TCP 端口 4560 上监听 Gazebo 的连接请求。
+
+
+
+
+
+
+
+
+
+
+
+
+知识补充：
+TCP、UDP端口
+    TCP和UDP是两种常见的传输层协议，使用端口号来发送和接收数据。
+        TCP（Transmission Control Protocol）协议，意为传输控制协议。提供可靠的、面向连接的服务
+        UDP（User Datagram Protocol）协议，意为用户数据报协议。速度快、无连接、不可靠，不追踪丢包信息和抵达顺序，适用于对实时性要求较高的应用，如流媒体、DNS、VoIP等。
+    它们的端口号范围均为0到65535，但这些端口号是互相独立的，即两个协议各自拥有 0 ~ 65535 的端口号。例如，TCP的80端口和UDP的80端口是两个完全独立的端口，它们可以同时被不同的服务使用。
+    IANA（Internet Assigned Numbers Authority）对端口号分配进行了以下划分：
+        0-1023：系统端口，通常由操作系统或核心网络服务使用，包含多种约定俗诚的常用服务。例如：0 通常用于分析操作系统，21 用于 FTP，80 用于 HTTP，443 用于 HTTPS 等。
+        1024-49151：注册端口， 可以注册给特定应用程序，它们松散地绑定于一些服务。例如：PX4 的 14550 端口用于与地面站通信。
+        49152-65535：动态或私有端口，一般用于临时通信，如客户端分配的源端口，理论上，不应为服务分配这些端口。
+
+

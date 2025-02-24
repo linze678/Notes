@@ -1,2 +1,0 @@
-Micro-XRCE-DDS-Agent 主要用于支持 ROS 2 与嵌入式设备（如微控制器）之间的通信，使用 DDS 协议进行实时数据传输。
-MAVROS 是一个 ROS 包，用于与飞行控制器（如 PX4 或 ArduPilot）之间进行通信，使用 MAVLink 协议来控制飞行器并处理飞行器的状态信息。

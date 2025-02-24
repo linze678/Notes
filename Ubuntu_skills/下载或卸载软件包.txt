@@ -1,0 +1,8 @@
+//下载
+sudo apt-get install 包名
+
+//卸载
+sudo apt-get remove 包名
+
+//删除系统中所有不再需要的包和依赖项
+sudo apt autoremove
