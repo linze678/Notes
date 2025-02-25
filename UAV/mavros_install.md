@@ -37,7 +37,7 @@
 
 
 
-二、ROS2下安装mavros2：(ROS2更推荐mavros2)
+二、ROS2下安装mavros2：(ROS2更推荐mavros2):
     1. 安装
     mkdir -p ~/mavros2_ws/src
     cd ~/mavros2_ws

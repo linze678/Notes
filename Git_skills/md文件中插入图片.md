@@ -1,1 +1,2 @@
-![图片描述](./../images/code-example.png)
+1. 复制图片
+2. 进入vscode，Ctrl+ALT+V
